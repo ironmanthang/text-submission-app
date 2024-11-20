@@ -135,24 +135,27 @@
             }
         }
 
-        // Function to delete all texts for the logged-in user
-        async function deleteAllTexts() {
-            const response = await fetch('https://text-submission-app.onrender.com/api/texts', {
-                method: 'DELETE',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                },
-            });
+// Function to delete all texts for the logged-in user
+async function deleteAllTexts() {
+    const response = await fetch('https://text-submission-app.onrender.com/api/texts/delete', {
+        method: 'DELETE',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+        },
+    });
 
-            const data = await response.json();
-            if (response.ok) {
-                alert("All texts deleted successfully!");
-                // Optionally, you can refresh the text list or hide the text section
-                document.getElementById("submitted-texts").innerHTML = "";  // Clear the displayed texts
-            } else {
-                alert("Error deleting texts: " + data.message);
-            }
-        }
+    const data = await response.json();
+    if (response.ok) {
+        alert("All texts deleted successfully!");
+
+        // Now clear the displayed texts in the frontend, only after deletion is confirmed
+        document.getElementById("submitted-texts").innerHTML = '';  // Clear the submitted texts section
+    } else {
+        alert("Error deleting texts: " + data.message);
+    }
+}
+
+
 
         // Logout
         function logout() {

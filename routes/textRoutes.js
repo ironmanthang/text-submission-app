@@ -37,15 +37,17 @@ router.get('/', authenticate, async (req, res) => {
     }
 });
 
-// DELETE all texts for the authenticated user
 router.delete('/delete', authenticate, async (req, res) => {
-    try {
-        // Delete all texts associated with the logged-in user
-        await Text.deleteMany({ userId: req.userId });
-        res.status(200).send('All texts deleted successfully');
-    } catch (err) {
-        res.status(400).send('Error deleting texts');
-    }
+  try {
+    const userId = req.user._id;  // Assuming the user's ID is stored in the req.user object after authentication
+
+    // Delete all texts for the user
+    await Text.deleteMany({ userId });
+
+    res.status(200).json({ message: 'All texts deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error deleting texts', error: error.message });
+  }
 });
 
 module.exports = router;
