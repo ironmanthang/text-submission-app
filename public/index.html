@@ -31,6 +31,9 @@
         <button onclick="submitText()">Submit</button>
         <button onclick="logout()">Logout</button>
 
+        <!-- Add a delete button for deleting all texts -->
+        <button onclick="deleteAllTexts()">Delete All Texts</button>
+
         <!-- Display Submitted Texts -->
         <h3>Your Submitted Texts</h3>
         <div id="submitted-texts"></div>
@@ -129,6 +132,25 @@
                 });
             } else {
                 textsDiv.textContent = 'Error fetching texts: ' + data.message;
+            }
+        }
+
+        // Function to delete all texts for the logged-in user
+        async function deleteAllTexts() {
+            const response = await fetch('https://text-submission-app.onrender.com/api/texts', {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                alert("All texts deleted successfully!");
+                // Optionally, you can refresh the text list or hide the text section
+                document.getElementById("submitted-texts").innerHTML = "";  // Clear the displayed texts
+            } else {
+                alert("Error deleting texts: " + data.message);
             }
         }
 

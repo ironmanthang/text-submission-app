@@ -37,4 +37,15 @@ router.get('/', authenticate, async (req, res) => {
     }
 });
 
+// DELETE all texts for the authenticated user
+router.delete('/delete', authenticate, async (req, res) => {
+    try {
+        // Delete all texts associated with the logged-in user
+        await Text.deleteMany({ userId: req.userId });
+        res.status(200).send('All texts deleted successfully');
+    } catch (err) {
+        res.status(400).send('Error deleting texts');
+    }
+});
+
 module.exports = router;
