@@ -3,18 +3,20 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const connectDB = require('./db');
+const path = require('path');
 const app = express();
 
 connectDB();
 
 app.use(cors());
 app.use(bodyParser.json());
+
 // Serve static files (like your HTML, CSS, JS) from the "public" directory
 app.use(express.static('public'));
 
-// Add a route to handle the root URL ("/")
+// Add a route to handle the root URL ("/") and serve index.html
 app.get('/', (req, res) => {
-  res.send('Server is up and running!');
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // Your API routes
