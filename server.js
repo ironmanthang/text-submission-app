@@ -9,6 +9,8 @@ connectDB();
 
 app.use(cors());
 app.use(bodyParser.json());
+// Serve static files (like your HTML, CSS, JS) from the "public" directory
+app.use(express.static('public'));
 
 // Add a route to handle the root URL ("/")
 app.get('/', (req, res) => {
