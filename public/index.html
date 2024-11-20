@@ -30,6 +30,10 @@
         <textarea id="text-content" placeholder="Type your text here" required></textarea>
         <button onclick="submitText()">Submit</button>
         <button onclick="logout()">Logout</button>
+
+        <!-- Display Submitted Texts -->
+        <h3>Your Submitted Texts</h3>
+        <div id="submitted-texts"></div>
     </div>
 
     <script>
@@ -70,6 +74,7 @@
                 token = data.token;
                 localStorage.setItem("token", token);
                 showTextSection();
+                fetchTexts(); // Fetch the texts when user logs in
             } else {
                 alert("Login failed: " + data.message);
             }
@@ -97,8 +102,33 @@
             const data = await response.json();
             if (response.ok) {
                 alert("Text submitted successfully!");
+                fetchTexts(); // Refresh the list of texts after submitting new text
             } else {
                 alert("Error submitting text: " + data.message);
+            }
+        }
+
+        // Fetch and display submitted texts
+        async function fetchTexts() {
+            const response = await fetch('https://text-submission-app.onrender.com/api/texts', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
+
+            const data = await response.json();
+            const textsDiv = document.getElementById("submitted-texts");
+            textsDiv.innerHTML = ''; // Clear previous texts
+
+            if (response.ok) {
+                data.forEach(text => {
+                    const p = document.createElement('p');
+                    p.textContent = text.content;
+                    textsDiv.appendChild(p);
+                });
+            } else {
+                textsDiv.textContent = 'Error fetching texts: ' + data.message;
             }
         }
 
@@ -111,9 +141,10 @@
             document.getElementById("register-section").style.display = "block";
         }
 
-        // If there's a token, show text section
+        // If there's a token, show text section and fetch texts
         if (token) {
             showTextSection();
+            fetchTexts();
         }
     </script>
 </body>
