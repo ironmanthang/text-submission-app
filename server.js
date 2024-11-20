@@ -10,6 +10,12 @@ connectDB();
 app.use(cors());
 app.use(bodyParser.json());
 
+// Add a route to handle the root URL ("/")
+app.get('/', (req, res) => {
+  res.send('Server is up and running!');
+});
+
+// Your API routes
 app.use('/api/users', require('./routes/userRoutes'));
 app.use('/api/texts', require('./routes/textRoutes'));
 
