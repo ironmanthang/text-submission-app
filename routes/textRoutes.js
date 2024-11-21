@@ -39,7 +39,7 @@ router.get('/', authenticate, async (req, res) => {
 
 router.delete('/delete', authenticate, async (req, res) => {
   try {
-    const userId = req.user._id;  // Assuming the user's ID is stored in the req.user object after authentication
+    const userId = req.userid;  // Assuming the user's ID is stored in the req.user object after authentication
 
     // Delete all texts for the user
     await Text.deleteMany({ userId });
