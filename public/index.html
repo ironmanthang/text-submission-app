@@ -148,10 +148,9 @@ async function deleteAllTexts() {
       const data = await response.json();
   
       if (response.ok) {
-        alert("All texts deleted successfully!");
+        alert(data.message); // Show the success or no-texts-found message
         document.getElementById("submitted-texts").innerHTML = ''; // Clear texts on successful deletion
       } else {
-        console.error("Delete failed:", data);
         alert("Error deleting texts: " + (data.message || "Unknown error"));
       }
     } catch (error) {
@@ -159,6 +158,7 @@ async function deleteAllTexts() {
       alert("Error deleting texts: " + error.message);
     }
   }
+  
   
 
 
