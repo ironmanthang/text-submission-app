@@ -38,16 +38,23 @@ router.get('/', authenticate, async (req, res) => {
 });
 
 router.delete('/delete', authenticate, async (req, res) => {
-  try {
-    const userId = req.userid;  // Assuming the user's ID is stored in the req.user object after authentication
-
-    // Delete all texts for the user
-    await Text.deleteMany({ userId });
-
-    res.status(200).json({ message: 'All texts deleted successfully' });
-  } catch (error) {
-    res.status(500).json({ message: 'Error deleting texts', error: error.message });
-  }
-});
+    try {
+      const userId = req.userId; // Use req.userId set by the authenticate middleware
+  
+      // Delete all texts for the user
+      const result = await Text.deleteMany({ userId });
+  
+      if (result.deletedCount > 0) {
+        res.status(200).json({ message: 'All texts deleted successfully' });
+      } else {
+        res.status(404).json({ message: 'No texts found to delete' });
+      }
+    } catch (error) {
+      console.error("Error deleting texts:", error.message); // Log the error for debugging
+      res.status(500).json({ message: 'Error deleting texts', error: error.message });
+    }
+  });
+  
+  
 
 module.exports = router;
