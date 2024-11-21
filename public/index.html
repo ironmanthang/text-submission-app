@@ -137,23 +137,29 @@
 
 // Function to delete all texts for the logged-in user
 async function deleteAllTexts() {
-    const response = await fetch('https://text-submission-app.onrender.com/api/texts/delete', {
+    try {
+      const response = await fetch('https://text-submission-app.onrender.com/api/texts/delete', {
         method: 'DELETE',
         headers: {
-            'Authorization': `Bearer ${token}`,
+          'Authorization': `Bearer ${token}`,
         },
-    });
-
-    const data = await response.json();
-    if (response.ok) {
+      });
+  
+      const data = await response.json();
+  
+      if (response.ok) {
         alert("All texts deleted successfully!");
-
-        // Now clear the displayed texts in the frontend, only after deletion is confirmed
-        document.getElementById("submitted-texts").innerHTML = '';  // Clear the submitted texts section
-    } else {
-        alert("Error deleting texts: " + data.message);
+        document.getElementById("submitted-texts").innerHTML = ''; // Clear texts on successful deletion
+      } else {
+        console.error("Delete failed:", data);
+        alert("Error deleting texts: " + (data.message || "Unknown error"));
+      }
+    } catch (error) {
+      console.error("Request error:", error.message);
+      alert("Error deleting texts: " + error.message);
     }
-}
+  }
+  
 
 
 
