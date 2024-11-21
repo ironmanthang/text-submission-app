@@ -28,33 +28,36 @@ router.post('/', authenticate, async (req, res) => {
 });
 
 // Get user texts
+// Get user texts
 router.get('/', authenticate, async (req, res) => {
     try {
-        const texts = await Text.find({ userId: req.userId });
-        res.json(texts);
+      // Sort texts by createdAt (or _id if timestamps aren't used) in descending order
+      const texts = await Text.find({ userId: req.userId }).sort({ createdAt: -1 });
+      res.json(texts);
     } catch (err) {
-        res.status(400).send('Error fetching texts');
-    }
-});
-
-router.delete('/delete', authenticate, async (req, res) => {
-    try {
-      const userId = req.userId; // Use req.userId set by the authenticate middleware
-  
-      // Delete all texts for the user
-      const result = await Text.deleteMany({ userId });
-  
-      if (result.deletedCount > 0) {
-        res.status(200).json({ message: 'All texts deleted successfully' });
-      } else {
-        res.status(404).json({ message: 'No texts found to delete' });
-      }
-    } catch (error) {
-      console.error("Error deleting texts:", error.message); // Log the error for debugging
-      res.status(500).json({ message: 'Error deleting texts', error: error.message });
+      res.status(400).send('Error fetching texts');
     }
   });
   
+  
+router.delete('/delete', authenticate, async (req, res) => {
+  try {
+    const userId = req.userId; // Use req.userId set by the authenticate middleware
+
+    // Delete all texts for the user
+    const result = await Text.deleteMany({ userId });
+
+    if (result.deletedCount > 0) {
+      res.status(200).json({ message: 'All texts deleted successfully' });
+    } else {
+      res.status(404).json({ message: 'No texts found to delete' });
+    }
+  } catch (error) {
+    console.error("Error deleting texts:", error.message); // Log the error for debugging
+    res.status(500).json({ message: 'Error deleting texts', error: error.message });
+  }
+});
+
   
 
 module.exports = router;

@@ -111,29 +111,32 @@
             }
         }
 
-        // Fetch and display submitted texts
-        async function fetchTexts() {
-            const response = await fetch('https://text-submission-app.onrender.com/api/texts', {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                },
-            });
+        // Fetch and display submitted texts// Fetch and display submitted texts
+async function fetchTexts() {
+    const response = await fetch('https://text-submission-app.onrender.com/api/texts', {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+  
+    const data = await response.json();
+    const textsDiv = document.getElementById("submitted-texts");
+    textsDiv.innerHTML = ''; // Clear previous texts
+  
+    if (response.ok) {
+      // Render texts in the order received (newest first if backend is sorted)
+      data.forEach(text => {
+        const p = document.createElement('p');
+        p.textContent = text.content;
+        textsDiv.appendChild(p); // Append each text to the div
+      });
+    } else {
+      textsDiv.textContent = 'Error fetching texts: ' + data.message;
+    }
+  }
+  
 
-            const data = await response.json();
-            const textsDiv = document.getElementById("submitted-texts");
-            textsDiv.innerHTML = ''; // Clear previous texts
-
-            if (response.ok) {
-                data.forEach(text => {
-                    const p = document.createElement('p');
-                    p.textContent = text.content;
-                    textsDiv.appendChild(p);
-                });
-            } else {
-                textsDiv.textContent = 'Error fetching texts: ' + data.message;
-            }
-        }
 
 // Function to delete all texts for the logged-in user
 async function deleteAllTexts() {
